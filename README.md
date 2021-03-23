@@ -1,5 +1,6 @@
 # References
 + Competition link https://www.kaggle.com/c/shopee-product-matching
++ Trello board https://trello.com/b/EaxLChyV/shopee
 + Baselines from other participants
     + [RAPIDS tf-idf + EfficientNetB0](https://www.kaggle.com/cdeotte/part-2-rapids-tfidfvectorizer-cv-0-700)
     + [BERT + EfficientNetB3](https://www.kaggle.com/ragnar123/unsupervised-baseline-arcface/)
@@ -17,6 +18,7 @@
 
 ## Pre-trained
 + Indonesian pre-trained language model (need to verify whether most of the titles are Indonesian)
+    + English, Indonesian, and Malaysian https://trello.com/c/9t1IRWsw/2-identify-the-main-languages-from-product-titles
 
 ## Fine-tuning
 + SentenceTransformers on pairs of titles from the same label_group
