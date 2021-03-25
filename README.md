@@ -7,6 +7,9 @@
 + EDA from other participants
     + https://www.kaggle.com/ruchi798/shopee-eda-rapids-preprocessing
 
+# Resources
++ Indonesian pre-trained models https://www.kaggle.com/liuhh02/datasets
+
 # Ideas
 ## Unsupervisied
 + FAISS index
