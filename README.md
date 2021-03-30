@@ -30,6 +30,25 @@
 + MLFlow 
 
 # EDA
+
+## Train set labels
++ [Remarks]
+    + **/!\\** 53% of target have length equal to 51 -> there are 50 duplicates + row itself
++ Baseline scores:
+    + [Each row in its own group]
+    ```
+    F1 = 0.4608
+    Precision:  1.0000
+    Recall:  0.3216
+    ```
+    + [Duplicates based on phash]
+    ```
+    F1 = 0.5531
+    Precision:  0.9941
+    Recall:  0.4222
+    ```
+    phash can be used as a first filter (<1% False Positives)
+
 ## Text 
 + [TEXT]
     + [BIG SALE] Timbangan Dapur Digital Kitchen Scale SF-400 Murah
