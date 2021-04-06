@@ -39,7 +39,7 @@ class DataGenerator(tf.keras.utils.Sequence):
         return X
 
 
-def get_embeddings(model, CHUNK=4096, batch_size=32):
+def get_embeddings(test, model, CHUNK=4096, batch_size=32):
     BASE = "../input/shopee-product-matching/test_images/"
     if COMPUTE_CV:
         BASE = "../input/shopee-product-matching/train_images/"
