@@ -1,3 +1,5 @@
+import gc
+
 import cupy
 import torch
 from tqdm import tqdm
