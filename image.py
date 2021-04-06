@@ -44,9 +44,6 @@ def get_embeddings(test, model, CHUNK=4096, batch_size=32):
     if COMPUTE_CV:
         BASE = "../input/shopee-product-matching/train_images/"
 
-    # WGT = "../input/effnetb0/efficientnetb0_notop.h5"
-    # model = EfficientNetB0(weights=WGT, include_top=False, pooling="avg", input_shape=None)
-
     embeds = []
 
     print("Computing image embeddings...")
