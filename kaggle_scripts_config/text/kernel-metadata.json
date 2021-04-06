@@ -1,0 +1,12 @@
+{
+  "id": "duccao/shopee-text-module",
+  "title": "Shopee-text-module",
+  "code_file": "../../text.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": "true",
+  "enable_gpu": "true",
+  "enable_internet": "false",
+  "competition_sources": [],
+  "kernel_sources": []
+}
