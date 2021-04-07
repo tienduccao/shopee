@@ -1,7 +1,7 @@
 {
   "id": "duccao/shopee-search-module",
   "title": "Shopee-search-module",
-  "code_file": "../../search.py",
+  "code_file": "../../shopee_search_module.py",
   "language": "python",
   "kernel_type": "script",
   "is_private": "true",

@@ -1,7 +1,7 @@
 {
   "id": "duccao/shopee-text-module",
   "title": "Shopee-text-module",
-  "code_file": "../../text.py",
+  "code_file": "../../shopee_text_module.py",
   "language": "python",
   "kernel_type": "script",
   "is_private": "true",

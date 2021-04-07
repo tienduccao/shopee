@@ -1,7 +1,7 @@
 {
   "id": "duccao/shopee-image-module",
   "title": "Shopee-image-module",
-  "code_file": "../../image.py",
+  "code_file": "../../shopee_image_module.py",
   "language": "python",
   "kernel_type": "script",
   "is_private": "true",
