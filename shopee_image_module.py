@@ -39,11 +39,7 @@ class DataGenerator(tf.keras.utils.Sequence):
         return X
 
 
-def get_embeddings(test, model, CHUNK=4096, batch_size=32):
-    BASE = "../input/shopee-product-matching/test_images/"
-    if COMPUTE_CV:
-        BASE = "../input/shopee-product-matching/train_images/"
-
+def get_embeddings(BASE, test, model, CHUNK=4096, batch_size=32):
     embeds = []
 
     print("Computing image embeddings...")
@@ -66,9 +62,9 @@ def get_embeddings(test, model, CHUNK=4096, batch_size=32):
 
         # if i>=1: break
 
-    del model, embeds
-    _ = gc.collect()
     image_embeddings = np.concatenate(embeds)
     print("image embeddings shape", image_embeddings.shape)
+    del model, embeds
+    _ = gc.collect()
 
     return image_embeddings

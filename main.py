@@ -1,7 +1,6 @@
 import gc
 
-import text, image, search
-from data import COMPUTE_CV, test
+import shopee_text_module as text, shopee_image_module as image, shopee_search_module as search
 
 import numpy as np
 import pandas as pd
@@ -27,8 +26,8 @@ if gpus:
 
 
 COMPUTE_CV = True
-TEST_MEMORY_ERROR = True
-QUICK_TEST = False
+TEST_MEMORY_ERROR = False
+QUICK_TEST = True
 TEST_DATA_SIZE = 1024 * 4
 
 
@@ -74,7 +73,10 @@ def generate_submission(test):
 def pipeline():
     WGT = "../input/effnetb0/efficientnetb0_notop.h5"
     model = EfficientNetB0(weights=WGT, include_top=False, pooling="avg", input_shape=None)
-    image_embeddings = image.get_embeddings(test, model)
+    BASE = "../input/shopee-product-matching/test_images/"
+    if COMPUTE_CV:
+        BASE = "../input/shopee-product-matching/train_images/"
+    image_embeddings = image.get_embeddings(BASE, test, model)
     preds = search.nearest_neighbors(test, image_embeddings, 0.1)
     test['preds2'] = preds
     del preds
@@ -101,3 +103,7 @@ def pipeline():
         print("CV Score =", test.f1.mean())
 
     generate_submission()
+
+
+if __name__ == '__main__':
+    pipeline()
