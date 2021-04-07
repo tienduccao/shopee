@@ -11,7 +11,7 @@
 ## Install the kaggle command line
 + https://github.com/Kaggle/kaggle-api
 ## Local
-+ Add new functions to `shopee_text.py`, `shopee_image.py`, `shopee_search.py`
++ Add new functions to `shopee_text_module.py`, `shopee_image_module.py`, `shopee_search_module.py`
 + Modify `main.py` in order incorporate new functions if needed
     + Set `COMPUTE_CV = True` if you want to compute the score on the training set
     + Set `TEST_MEMORY_ERROR = True` to test your code with the training set x2
