@@ -102,7 +102,7 @@ def pipeline():
         test["f1"] = test.apply(getMetric("oof"), axis=1)
         print("CV Score =", test.f1.mean())
 
-    generate_submission()
+    generate_submission(test)
 
 
 if __name__ == '__main__':
