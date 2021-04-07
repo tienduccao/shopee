@@ -1,7 +1,7 @@
 import gc
 
-import cupy
 import torch
+import numpy as np
 from tqdm import tqdm
 
 
@@ -20,7 +20,7 @@ def get_embeddings(test, transformer_model, tokenizer, max_length):
             output = transformer_model(**encoded_input.to('cuda'))
             list_text_embeddings.extend(output.last_hidden_state.cpu().detach().numpy()[0].mean(0).reshape(1, 768))
 
-    text_embeddings = cupy.asarray(list_text_embeddings)
+    text_embeddings = np.asarray(list_text_embeddings)
 
     del list_text_embeddings, transformer_model
     gc.collect()
