@@ -7,6 +7,33 @@
 + EDA from other participants
     + https://www.kaggle.com/ruchi798/shopee-eda-rapids-preprocessing
 
+# Workflow
+## Install the kaggle command line
++ https://github.com/Kaggle/kaggle-api
+## Local
++ Add new functions to `shopee_text.py`, `shopee_image.py`, `shopee_search.py`
++ Modify `main.py` in incorporate new functions if needed
+    + Set `COMPUTE_CV = True` if you want to compute the score on the training set
+    + Set `TEST_MEMORY_ERROR = True` to test your code with the training set x2
+    + Set `QUICK_TEST = True` to test your code with a dataset of 4096 rows
++ Commit and push your changes with git
+## Push new functions to Kaggle
++ `kaggle kernels push -p kaggle_scripts/config/text` if your made only changes to `shopee_text_module.py`.
++ `kaggle kernels push -p kaggle_scripts/config/image` if your made only changes to `shopee_image_module.py`.
++ `kaggle kernels push -p kaggle_scripts/config/search` if your made only changes to `shopee_search_module.py`.
++ `./upload_utility_scripts.sh` if you made changes to 3 modules.
++ You should wait a bit (max 30 seconds) to have your new versions available in Kaggle.
+## Push your new main.py to Kaggle
++ Edit `main.py`
+    + Set `COMPUTE_VC = False`
+    + Set `TEST_MEMORY_ERROR = False`
+    + Set `QUICK_TEST = False`
++ Edit `kernel-metadata.json`
+    + Set an appropriate name for `id`, replace `duccao` with your username
+    + `title` is the same as `id` (but having `<username>/` removed)
+    + Add new datasets to `dataset_sources` if needed
++ `kaggle kernels push`
+
 # Resources
 + Indonesian pre-trained models https://www.kaggle.com/liuhh02/datasets
 
