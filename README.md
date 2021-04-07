@@ -12,7 +12,7 @@
 + https://github.com/Kaggle/kaggle-api
 ## Local
 + Add new functions to `shopee_text.py`, `shopee_image.py`, `shopee_search.py`
-+ Modify `main.py` in incorporate new functions if needed
++ Modify `main.py` in order incorporate new functions if needed
     + Set `COMPUTE_CV = True` if you want to compute the score on the training set
     + Set `TEST_MEMORY_ERROR = True` to test your code with the training set x2
     + Set `QUICK_TEST = True` to test your code with a dataset of 4096 rows
