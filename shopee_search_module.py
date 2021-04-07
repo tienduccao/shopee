@@ -1,3 +1,6 @@
+import gc
+
+import numpy as np
 from cuml.neighbors import NearestNeighbors
 
 
