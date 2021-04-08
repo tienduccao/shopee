@@ -6,6 +6,21 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 from tensorflow.keras.applications import EfficientNetB0
+from memory_profiler import memory_usage
+
+
+MAX_MEMORY = 13 * 1024
+
+
+def mem_check(func):
+    def wrapper(*arg, **kwargs):
+        max_mem, function_value = memory_usage(proc=(func, arg, kwargs), max_usage=True, retval=True)
+        print(f"Max memory usage of {func.__name__} is {max_mem} MB")
+        if max_mem > MAX_MEMORY:
+            raise Exception(f'Max Memory Error {max_mem} vs {MAX_MEMORY}')
+        return function_value
+
+    return wrapper
 
 
 LIMIT = 1
@@ -28,23 +43,7 @@ if gpus:
 COMPUTE_CV = True
 TEST_MEMORY_ERROR = False
 QUICK_TEST = True
-TEST_DATA_SIZE = 1024 * 4
-
-
-if COMPUTE_CV:
-    test = pd.read_csv('../input/shopee-product-matching/train.csv')
-
-    if QUICK_TEST:
-        test = test[:TEST_DATA_SIZE]
-
-    if TEST_MEMORY_ERROR:
-        test = pd.concat((test, test))
-#         test.title = test.title.apply(lambda title: title + ' ' + " text " * 100)
-
-    print('Using train as test to compute CV (since commit notebook). Shape is', test.shape )
-else:
-    test = pd.read_csv('../input/shopee-product-matching/test.csv')
-    print('Test shape is', test.shape )
+TEST_DATA_SIZE = 100 # 1024 * 4
 
 
 def getMetric(col):
@@ -70,7 +69,8 @@ def generate_submission(test):
     test[["posting_id", "matches"]].to_csv("submission.csv", index=False)
 
 
-def pipeline():
+@mem_check
+def predict_images(test):
     WGT = "../input/effnetb0/efficientnetb0_notop.h5"
     model = EfficientNetB0(weights=WGT, include_top=False, pooling="avg", input_shape=None)
     BASE = "../input/shopee-product-matching/test_images/"
@@ -82,6 +82,11 @@ def pipeline():
     del preds
     gc.collect()
 
+    return test
+
+
+@mem_check
+def predict_texts(test):
     from transformers import DistilBertTokenizer, DistilBertModel
     model_name='../input/distilbert-base-indonesian'
     tokenizer = DistilBertTokenizer.from_pretrained(model_name)
@@ -91,6 +96,14 @@ def pipeline():
     test['preds'] = preds
     del preds
     gc.collect()
+
+    return test
+
+
+def pipeline(test):
+    test = predict_images(test)
+
+    test = predict_texts(test)
 
     tmp = test.groupby('image_phash').posting_id.agg('unique').to_dict()
     test['preds3'] = test.image_phash.map(tmp)
@@ -106,4 +119,19 @@ def pipeline():
 
 
 if __name__ == '__main__':
-    pipeline()
+    if COMPUTE_CV:
+        test = pd.read_csv('../input/shopee-product-matching/train.csv')
+
+        if QUICK_TEST:
+            test = test[:TEST_DATA_SIZE]
+
+        if TEST_MEMORY_ERROR:
+            test = pd.concat((test, test))
+    #         test.title = test.title.apply(lambda title: title + ' ' + " text " * 100)
+
+        print('Using train as test to compute CV (since commit notebook). Shape is', test.shape )
+    else:
+        test = pd.read_csv('../input/shopee-product-matching/test.csv')
+        print('Test shape is', test.shape )
+
+    pipeline(test)
