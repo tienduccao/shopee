@@ -2,6 +2,7 @@ import gc
 
 import shopee_text_module as text, shopee_image_module as image, shopee_search_module as search
 
+import torch
 import numpy as np
 import pandas as pd
 import tensorflow as tf
@@ -41,9 +42,9 @@ if gpus:
 
 
 COMPUTE_CV = True
-TEST_MEMORY_ERROR = True
-QUICK_TEST = False
-TEST_DATA_SIZE = 100 # 1024 * 4
+TEST_MEMORY_ERROR = False
+QUICK_TEST = True
+TEST_DATA_SIZE = 1024 * 4
 
 
 def getMetric(col):
@@ -87,12 +88,11 @@ def predict_images(test):
 
 @mem_check
 def predict_texts(test):
-    from transformers import AutoModel, AutoTokenizer
-    model_name = 'sentence-transformers/paraphrase-xlm-r-multilingual-v1'
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    bert_model = AutoModel.from_pretrained(model_name).cuda()
-    text_embeddings = text.get_embeddings(test, bert_model, tokenizer, 20)
-    preds = search.nearest_neighbors(test, text_embeddings, 0.4)
+    model_name = '../input/shopeesentencetransformers/fine_tuned_titles'
+    model = torch.load(model_name)
+    model.eval()
+    text_embeddings = text.get_sentence_transformer_embeddings(test, model)
+    preds = search.nearest_neighbors(test, text_embeddings, 1.0)
     test['preds'] = preds
     del preds
     gc.collect()
@@ -118,20 +118,19 @@ def pipeline(test):
     generate_submission(test)
 
 
-if __name__ == '__main__':
-    if COMPUTE_CV:
-        test = pd.read_csv('../input/shopee-product-matching/train.csv')
+if COMPUTE_CV:
+    test = pd.read_csv('../input/shopee-product-matching/train.csv')
 
-        if QUICK_TEST:
-            test = test[:TEST_DATA_SIZE]
+    if QUICK_TEST:
+        test = test[:TEST_DATA_SIZE]
 
-        if TEST_MEMORY_ERROR:
-            test = pd.concat((test, test))
-    #         test.title = test.title.apply(lambda title: title + ' ' + " text " * 100)
+    if TEST_MEMORY_ERROR:
+        test = pd.concat((test, test))
+#         test.title = test.title.apply(lambda title: title + ' ' + " text " * 100)
 
-        print('Using train as test to compute CV (since commit notebook). Shape is', test.shape )
-    else:
-        test = pd.read_csv('../input/shopee-product-matching/test.csv')
-        print('Test shape is', test.shape )
+    print('Using train as test to compute CV (since commit notebook). Shape is', test.shape )
+else:
+    test = pd.read_csv('../input/shopee-product-matching/test.csv')
+    print('Test shape is', test.shape )
 
-    pipeline(test)
+pipeline(test)
