@@ -2,3 +2,6 @@
 *.swp
 # Virtualenv
 .venv
+# Jupyter
+.ipynb_checkpoints/
+main.ipynb
