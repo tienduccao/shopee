@@ -2,3 +2,15 @@
 *.swp
 # Virtualenv
 .venv
+
+.env
+log/
+.ipynb_checkpoints
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# IDE's configuration files
+.idea
+.vscode
