@@ -1,13 +1,13 @@
 {
-  "id": "duccao/test-upload-to-kaggle",
-  "title": "Test upload to kaggle",
+  "id": "duccao/baseline-sentence-transformers",
+  "title": "Baseline sentence transformers",
   "code_file": "main.py",
   "language": "python",
   "kernel_type": "script",
   "is_private": "true",
   "enable_gpu": "true",
-  "enable_internet": "false",
-  "dataset_sources": ["cdeotte/effnetb0", "hengzheng/distilbert-base-indonesian"],
+  "enable_internet": "true",
+  "dataset_sources": ["cdeotte/effnetb0"],
   "competition_sources": ["shopee-product-matching"],
   "kernel_sources": ["duccao/shopee-text-module", "duccao/shopee-search-module", "duccao/shopee-image-module"]
 }
