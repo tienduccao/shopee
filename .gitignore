@@ -14,3 +14,6 @@ __pycache__/
 # IDE's configuration files
 .idea
 .vscode
+
+# Kaggle dataset metadata
+dataset-metadata.json
