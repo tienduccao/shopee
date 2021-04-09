@@ -41,8 +41,8 @@ if gpus:
 
 
 COMPUTE_CV = True
-TEST_MEMORY_ERROR = False
-QUICK_TEST = True
+TEST_MEMORY_ERROR = True
+QUICK_TEST = False
 TEST_DATA_SIZE = 100 # 1024 * 4
 
 
@@ -87,12 +87,12 @@ def predict_images(test):
 
 @mem_check
 def predict_texts(test):
-    from transformers import DistilBertTokenizer, DistilBertModel
-    model_name='../input/distilbert-base-indonesian'
-    tokenizer = DistilBertTokenizer.from_pretrained(model_name)
-    bert_model = DistilBertModel.from_pretrained(model_name).cuda()
+    from transformers import AutoModel, AutoTokenizer
+    model_name = 'sentence-transformers/paraphrase-xlm-r-multilingual-v1'
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    bert_model = AutoModel.from_pretrained(model_name).cuda()
     text_embeddings = text.get_embeddings(test, bert_model, tokenizer, 20)
-    preds = search.nearest_neighbors(test, text_embeddings, 0.3)
+    preds = search.nearest_neighbors(test, text_embeddings, 0.4)
     test['preds'] = preds
     del preds
     gc.collect()
