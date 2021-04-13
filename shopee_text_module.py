@@ -26,7 +26,7 @@ def get_sentence_transformer_embeddings(test, model):
             range(num_batches), total=num_batches, desc="Text embeddings"
         ):
             batch = titles[batch_id * batch_size : (batch_id + 1) * batch_size]
-            output = model.encode(batch, convert_to_tensor=True).detach().cpu().numpy()[0]
+            output = model.encode(batch, convert_to_tensor=True, show_progress_bar=False).detach().cpu().numpy()[0]
             list_text_embeddings.append(output)
 
     text_embeddings = np.asarray(list_text_embeddings)
