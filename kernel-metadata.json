@@ -7,7 +7,7 @@
   "is_private": "true",
   "enable_gpu": "true",
   "enable_internet": "true",
-  "dataset_sources": ["cdeotte/effnetb0", "duccao/shopeesentencetransformers"],
+  "dataset_sources": ["cdeotte/effnetb0", "duccao/fine-tuned-titles"],
   "competition_sources": ["shopee-product-matching"],
   "kernel_sources": ["duccao/shopee-text-module", "duccao/shopee-search-module", "duccao/shopee-image-module"]
 }

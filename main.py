@@ -43,7 +43,7 @@ if gpus:
 
 COMPUTE_CV = True
 TEST_MEMORY_ERROR = False
-QUICK_TEST = True
+QUICK_TEST = False
 TEST_DATA_SIZE = 1024 * 4
 
 
@@ -78,7 +78,7 @@ def predict_images(test):
     if COMPUTE_CV:
         BASE = "../input/shopee-product-matching/train_images/"
     image_embeddings = image.get_embeddings(BASE, test, model)
-    preds = search.nearest_neighbors(test, image_embeddings, 0.1)
+    preds = search.perfect_nearest_neighbors(test, image_embeddings, 1.0, 50, test.num_neighbors)
     test['preds2'] = preds
     del preds
     gc.collect()
@@ -88,11 +88,14 @@ def predict_images(test):
 
 @mem_check
 def predict_texts(test):
-    model_name = '../input/shopeesentencetransformers/fine_tuned_titles'
-    model = torch.load(model_name)
+    # model_name = '../input/fine-tuned-titles/fine_tuned_titles'
+    # model = torch.load(model_name)
+    # model.eval()
+    from sentence_transformers import SentenceTransformer
+    model = SentenceTransformer('distiluse-base-multilingual-cased-v2').cuda()
     model.eval()
     text_embeddings = text.get_sentence_transformer_embeddings(test, model)
-    preds = search.nearest_neighbors(test, text_embeddings, 1.0)
+    preds = search.perfect_nearest_neighbors(test, text_embeddings, 1.0, 50, test.num_neighbors)
     test['preds'] = preds
     del preds
     gc.collect()
@@ -101,6 +104,12 @@ def predict_texts(test):
 
 
 def pipeline(test):
+    if COMPUTE_CV:
+        tmp = test.groupby("label_group").posting_id.agg("unique").to_dict()
+        test["target"] = test.label_group.map(tmp)
+
+    test["num_neighbors"] = test.target.apply(lambda target: len(target))
+
     test = predict_images(test)
 
     test = predict_texts(test)
@@ -109,13 +118,11 @@ def pipeline(test):
     test['preds3'] = test.image_phash.map(tmp)
 
     if COMPUTE_CV:
-        tmp = test.groupby("label_group").posting_id.agg("unique").to_dict()
-        test["target"] = test.label_group.map(tmp)
         test["oof"] = test.apply(combine_for_cv, axis=1)
         test["f1"] = test.apply(getMetric("oof"), axis=1)
         print("CV Score =", test.f1.mean())
 
-    generate_submission(test)
+    # generate_submission(test)
 
 
 if COMPUTE_CV:
