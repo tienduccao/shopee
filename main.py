@@ -78,7 +78,7 @@ def predict_images(test):
     if COMPUTE_CV:
         BASE = "../input/shopee-product-matching/train_images/"
     image_embeddings = image.get_embeddings(BASE, test, model)
-    preds = search.perfect_nearest_neighbors(test, image_embeddings, 1.0, 50, test.num_neighbors)
+    preds = search.perfect_nearest_neighbors(test, image_embeddings, 0.3, 50, test.num_neighbors)
     test['preds2'] = preds
     del preds
     gc.collect()
@@ -95,7 +95,7 @@ def predict_texts(test):
     model = SentenceTransformer('distiluse-base-multilingual-cased-v2').cuda()
     model.eval()
     text_embeddings = text.get_sentence_transformer_embeddings(test, model)
-    preds = search.perfect_nearest_neighbors(test, text_embeddings, 1.0, 50, test.num_neighbors)
+    preds = search.perfect_nearest_neighbors(test, text_embeddings, 0.3, 50, test.num_neighbors)
     test['preds'] = preds
     del preds
     gc.collect()
