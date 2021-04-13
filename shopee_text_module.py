@@ -13,8 +13,7 @@ from sentence_transformers import SentenceTransformer, util, InputExample, losse
 from torch.utils.data import DataLoader
 
 
-def get_sentence_transformer_embeddings(test, model):
-    batch_size = 1
+def get_sentence_transformer_embeddings(test, model, batch_size):
     num_batches = test.shape[0] // batch_size
     if num_batches * batch_size < test.shape[0]:
         num_batches += 1
@@ -26,8 +25,8 @@ def get_sentence_transformer_embeddings(test, model):
             range(num_batches), total=num_batches, desc="Text embeddings"
         ):
             batch = titles[batch_id * batch_size : (batch_id + 1) * batch_size]
-            output = model.encode(batch, convert_to_tensor=True, show_progress_bar=False).detach().cpu().numpy()[0]
-            list_text_embeddings.append(output)
+            output = model.encode(batch, convert_to_tensor=True, show_progress_bar=False).detach().cpu().numpy().tolist()
+            list_text_embeddings.extend(output)
 
     text_embeddings = np.asarray(list_text_embeddings)
 
