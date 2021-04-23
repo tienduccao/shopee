@@ -65,9 +65,8 @@ class SiameseNet(nn.Module):
         self.embedding_net = embedding_net
 
     def forward(self, x1, x2, t1, t2):
-        output1 = self.embedding_net(x1)
-        output2 = self.embedding_net(x2)
-        print(torch.cat((output1, t1), dim=1).shape)
+        output1 = torch.cat((self.embedding_net(x1), t1), dim=1)
+        output2 = torch.cat((self.embedding_net(x2), t2), dim=1)
         return output1, output2
 
     def get_embedding(self, x):
