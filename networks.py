@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
@@ -63,9 +64,10 @@ class SiameseNet(nn.Module):
         super(SiameseNet, self).__init__()
         self.embedding_net = embedding_net
 
-    def forward(self, x1, x2):
+    def forward(self, x1, x2, t1, t2):
         output1 = self.embedding_net(x1)
         output2 = self.embedding_net(x2)
+        print(torch.cat((output1, t1), dim=1).shape)
         return output1, output2
 
     def get_embedding(self, x):

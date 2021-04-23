@@ -20,3 +20,6 @@ dataset-metadata.json
 # Jupyter
 .ipynb_checkpoints/
 main.ipynb
+
+# Competition data
+data/

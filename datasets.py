@@ -1,8 +1,25 @@
+import pandas as pd
 import numpy as np
 from PIL import Image
 
 from torch.utils.data import Dataset
 from torch.utils.data.sampler import BatchSampler
+
+from sentence_transformers import SentenceTransformer
+
+st_model = SentenceTransformer('distiluse-base-multilingual-cased-v2')
+
+
+class TextDataset(Dataset):
+    def __init__(self, csv_file='data/train.csv'):
+        self.df = pd.read_csv(csv_file)
+        self.df = pd.concat((self.df, self.df), copy=False).reset_index()
+
+    def __len__(self):
+        return self.df.shape[0]
+
+    def __getitem__(self, idx):
+        return st_model.encode(self.df.loc[idx, 'title'], show_progress_bar=False)
 
 
 class SiameseMNIST(Dataset):
@@ -11,8 +28,9 @@ class SiameseMNIST(Dataset):
     Test: Creates fixed pairs for testing
     """
 
-    def __init__(self, mnist_dataset):
+    def __init__(self, mnist_dataset, text_dataset):
         self.mnist_dataset = mnist_dataset
+        self.text_dataset = text_dataset
 
         self.train = self.mnist_dataset.train
         self.transform = self.mnist_dataset.transform
@@ -49,9 +67,12 @@ class SiameseMNIST(Dataset):
             self.test_pairs = positive_pairs + negative_pairs
 
     def __getitem__(self, index):
+
         if self.train:
             target = np.random.randint(0, 2)
             img1, label1 = self.train_data[index], self.train_labels[index].item()
+            text1 = self.text_dataset[index]
+
             if target == 1:
                 siamese_index = index
                 while siamese_index == index:
@@ -59,10 +80,18 @@ class SiameseMNIST(Dataset):
             else:
                 siamese_label = np.random.choice(list(self.labels_set - set([label1])))
                 siamese_index = np.random.choice(self.label_to_indices[siamese_label])
+
             img2 = self.train_data[siamese_index]
+            text2 = self.text_dataset[siamese_index]
         else:
             img1 = self.test_data[self.test_pairs[index][0]]
+            # TODO test set
+            text1 = self.text_dataset[index]
+
             img2 = self.test_data[self.test_pairs[index][1]]
+            # TODO test set
+            text2 = self.text_dataset[index]
+
             target = self.test_pairs[index][2]
 
         img1 = Image.fromarray(img1.numpy(), mode='L')
@@ -70,7 +99,7 @@ class SiameseMNIST(Dataset):
         if self.transform is not None:
             img1 = self.transform(img1)
             img2 = self.transform(img2)
-        return (img1, img2), target
+        return (img1, img2, text1, text2), target
 
     def __len__(self):
         return len(self.mnist_dataset)
