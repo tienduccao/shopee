@@ -1,5 +1,8 @@
 import random
-from typing import Any, List
+from typing import Any, List, Optional
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def sample_triplets(groups: List[List[Any]]) -> List[List[Any]]:
@@ -30,3 +33,23 @@ def sample_triplets(groups: List[List[Any]]) -> List[List[Any]]:
         triplets.append([anchor, positive, negative])
 
     return triplets
+
+
+def show_triplet(
+    triplet: Tuple[np.ndarray, np.ndarray, np.ndarray],
+    title: Optional[str] = None,
+    figure_scale: int = 5,
+):
+    """Plot a triplet of images (anchor, positive, negative)"""
+    plots = zip(triplet, ["anchor", "positive", "negative"])
+
+    plt.figure(figsize=(3 * figure_scale, figure_scale))
+    for j, (image, subtitle) in enumerate(plots):
+        plt.subplot(1, 3, j + 1)
+        plt.imshow(image)
+        plt.title(f"{subtitle}, shape: {image.shape[:2]}")
+        plt.axis("off")
+
+    if title:
+        plt.suptitle(title)
+    plt.show()
