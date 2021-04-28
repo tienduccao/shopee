@@ -17,3 +17,6 @@ __pycache__/
 
 # Kaggle dataset metadata
 dataset-metadata.json
+# Jupyter
+.ipynb_checkpoints/
+main.ipynb
