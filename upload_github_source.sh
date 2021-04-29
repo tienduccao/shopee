@@ -1,1 +1,1 @@
-kaggle datasets version -m "Update data" -d --dir-mode zip
+kaggle datasets version -m "Update shopee-github" -r zip
