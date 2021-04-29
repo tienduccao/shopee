@@ -111,6 +111,6 @@ class ImageTripletsDataset(Dataset):
             negative = self.negative_augmentations(image=negative)["image"]
         triplet = (anchor, positive, negative)
 
-        label = tuple([torch.tensor(self.labels[i] for i in triplet_indices)])
+        label = tuple([torch.tensor(self.labels[i]) for i in triplet_indices])
 
         return triplet, label
