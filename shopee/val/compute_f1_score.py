@@ -1,7 +1,57 @@
+from collections import defaultdict
+from typing import Optional, Tuple
+
 from einops import rearrange, reduce
+import numpy as np
+
+from .compute_knn import compute_knn
 
 
 def compute_f1_score(
+    embeddings: np.ndarray,
+    labels: np.ndarray,
+    n_neighbors: int = 50,
+    thresholds: Optional[np.ndarray] = None,
+) -> Tuple[float, float]:
+    """
+    Compute F1 score for each threshold by using cosine distance
+
+     Args:
+        embeddings: array of shape (N, C) where N is number of samples and C
+            embeddings dimension
+        labels: array of shape (N) containing label_group for each sample
+        n_neighbors: number of neighbors to compute
+        thresholds: thresholds for which F1 score should be computed
+
+    Returns:
+        scores: F1 score values for each threshold for these embeddings
+    """
+    if thresholds is None:
+        thresholds = np.linspace(0.0, 1.0, num=101)
+    knn_scores, knn_indices = compute_knn(embeddings, n_neighbors)
+    knn_labels = labels[knn_indices]
+
+    counts = defaultdict(lambda: 0)
+    for label in labels:
+        counts[label] += 1
+    labels_counts = np.array([counts[label] for label in labels])
+
+    scores = _compute_f1_score(
+        knn_scores,
+        knn_labels,
+        labels,
+        labels_counts,
+        thresholds,
+    )
+
+    # best = np.argmax(scores)
+    # best_score = scores[best]
+    # best_threshold = thresholds[best]
+
+    return scores
+
+
+def _compute_f1_score(
     knn_scores, knn_labels, labels, labels_counts, thresholds, verbose=False
 ):
     """
@@ -80,6 +130,6 @@ if __name__ == "__main__":
     # thresholds = np.linspace(0, 1, num=101)
     thresholds = np.sort(np.unique(knn_scores))
 
-    scores = compute_f1_score(
+    scores = _compute_f1_score(
         knn_scores, knn_labels, labels, labels_counts, thresholds, verbose=True
     )
