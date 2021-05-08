@@ -46,9 +46,9 @@ def get_embeddings(
 
     with torch.no_grad():
         image_embeddings = torch.cat([
-            model(batch.to(device))
+            model(batch.to(device)).cpu()
             for batch in tqdm(image_loader)
-        ]).squeeze()
+        ]).squeeze().numpy()
 
     print("image embeddings shape", image_embeddings.shape)
 

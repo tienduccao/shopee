@@ -26,7 +26,7 @@ def compute_knn(
     model = NearestNeighbors(n_neighbors=n_neighbors, metric="cosine")
     model.fit(embeddings)
 
-    n_embeddings = len(embeddings)
+    n_embeddings = embeddings.shape[0]
 
     knn_scores = np.zeros((n_embeddings, n_neighbors), dtype=np.float32)
     knn_indices = np.zeros((n_embeddings, n_neighbors), dtype=np.int32)
