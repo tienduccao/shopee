@@ -56,9 +56,13 @@ def hardest_triplet(
     if mode == "min":
         updated_distance = torch.where(same_label, inf, dist)
         hardest_negative_distance = torch.min(updated_distance, dim=1)[0]
+        updated_distance = torch.where(same_label, dist, -inf)
+        hardest_positive_distance = torch.max(updated_distance, dim=1)[0]
     else:
         updated_distance = torch.where(same_label, -inf, dist)
         hardest_negative_distance = torch.max(updated_distance, dim=1)[0]
+        updated_distance = torch.where(same_label, dist, inf)
+        hardest_positive_distance = torch.min(updated_distance, dim=1)[0]
 
     # used for checking
     if DEBUG:
@@ -67,7 +71,7 @@ def hardest_triplet(
         print(f"Positive distance:\n{positive_distance}")
         print(f"Hardest negative distance:\n{hardest_negative_distance}")
 
-    return positive_distance, hardest_negative_distance
+    return hardest_positive_distance, hardest_negative_distance
 
 
 if __name__ == "__main__":

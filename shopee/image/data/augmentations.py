@@ -20,3 +20,19 @@ def get_inference_augmentations(size: Tuple[int, int] = DEFAULT_SIZE):
             ToTensorV2(always_apply=True),
         ]
     )
+
+
+# https://www.kaggle.com/parthdhameliya77/shopee-pytorch-eca-nfnet-l0-image-training
+def get_train_augmentations(size: Tuple[int, int] = DEFAULT_SIZE):
+    return albumentations.Compose(
+        [   
+            albumentations.Resize(size[0], size[1],always_apply=True),
+            albumentations.HorizontalFlip(p=0.5),
+            albumentations.VerticalFlip(p=0.5),
+            albumentations.Rotate(limit=120, p=0.8),
+            albumentations.RandomBrightness(limit=(0.09, 0.6), p=0.5),
+            albumentations.Normalize(always_apply=True),
+            ToTensorV2(always_apply=True),
+        ]
+    )
+
